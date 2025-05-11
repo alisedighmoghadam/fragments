@@ -4,7 +4,10 @@
   "description": "Fragments back-end API",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "eslint \"./src/**/*.js\""
+    "lint": "eslint \"./src/**/*.js\"",
+    "start": "node src/server.js",
+    "dev": "cross-env LOG_LEVEL=debug nodemon ./src/server.js --watch src",
+    "debug": "cross-env LOG_LEVEL=debug nodemon --inspect=0.0.0.0:9229 ./src/server.js --watch src"
   },
   "repository": {
     "type": "git",
@@ -16,11 +19,13 @@
     "@eslint/js": "^9.26.0",
     "eslint": "^9.26.0",
     "globals": "^16.1.0",
+    "nodemon": "^3.1.10",
     "prettier": "3.5.3"
   },
   "dependencies": {
     "compression": "^1.8.0",
     "cors": "^2.8.5",
+    "cross-env": "^7.0.3",
     "express": "^5.1.0",
     "helmet": "^8.1.0",
     "node": "^24.0.1",
