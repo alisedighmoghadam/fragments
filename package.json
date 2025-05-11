@@ -10,6 +10,8 @@
     "url": "git+https://github.com/alisedighmoghadam/fragments.git"
   },
   "author": "Ali Sedigh Moghadam",
-  "license": "UNLICENSED"
-  
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "prettier": "3.5.3"
+  }
 }
