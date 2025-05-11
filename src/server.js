@@ -13,6 +13,12 @@ const app = require('./app');
 // eslint-disable-next-line no-undef
 const port = parseInt(process.env.PORT || '8080', 10);
 
+// eslint-disable-next-line no-undef
+if (process.env.LOG_LEVEL === 'debug') {
+  // eslint-disable-next-line no-undef
+  console.log('Environment Variables:', process.env);
+}
+
 // Start a server listening on this port
 const server = stoppable(
   app.listen(port, () => {
