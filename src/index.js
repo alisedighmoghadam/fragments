@@ -1,4 +1,3 @@
-const failTest = 'Testing ESlint for CI';
 // src/index.js
 
 // Read environment variables from an .env file (if present)
