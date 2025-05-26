@@ -8,16 +8,20 @@ const passport = require('passport');
 const BearerStrategy = require('passport-http-bearer').Strategy;
 const { CognitoJwtVerifier } = require('aws-jwt-verify');
 
-const logger = require('./logger');
+const logger = require('../logger');
 
+// We expect AWS_COGNITO_POOL_ID and AWS_COGNITO_CLIENT_ID to be defined.
+if (!(process.env.AWS_COGNITO_POOL_ID && process.env.AWS_COGNITO_CLIENT_ID)) {
+  throw new Error('missing expected env vars: AWS_COGNITO_POOL_ID and AWS_COGNITO_CLIENT_ID');
+}
 // Create a Cognito JWT Verifier, which will confirm that any JWT we
 // get from a user is valid and something we can trust. See:
 // https://github.com/awslabs/aws-jwt-verify#cognitojwtverifier-verify-parameters
 const jwtVerifier = CognitoJwtVerifier.create({
   // These variables must be set in the .env
-  // eslint-disable-next-line no-undef
+
   userPoolId: process.env.AWS_COGNITO_POOL_ID,
-  // eslint-disable-next-line no-undef
+
   clientId: process.env.AWS_COGNITO_CLIENT_ID,
   // We expect an Identity Token (vs. Access Token)
   tokenUse: 'id',
