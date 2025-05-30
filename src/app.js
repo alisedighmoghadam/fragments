@@ -7,7 +7,7 @@ const compression = require('compression');
 const { createErrorResponse } = require('./response');
 
 // author and version from our package.json file
-// TODO: make sure you have updated your name in the `author` section
+
 //const { author, version } = require('../package.json');
 
 const logger = require('./logger');
@@ -50,7 +50,6 @@ app.use(passport.initialize());
 //   res.status(200).json({
 //     status: 'ok',
 //     author,
-//     // TODO: change this to use your GitHub username!
 //     githubUrl: 'https://github.com/alisedighmoghadam/fragments.git',
 //     version,
 //   });
