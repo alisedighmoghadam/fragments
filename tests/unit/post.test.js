@@ -5,12 +5,12 @@ const app = require('../../src/app');
 const { Fragment } = require('../../src/model/fragment');
 
 describe('POST /v1/fragments', () => {
-  test('unauthenticated requests are denied', () => {
-    request(app).post('/v1/fragments').expect(401);
+  test('unauthenticated requests are denied', async () => {
+    await request(app).post('/v1/fragments').expect(401);
   });
 
-  test('incorrect credentials are denied', () => {
-    request(app).post('v1/fragments').auth('dummyUser@email.com', 'password1').expect(401);
+  test('incorrect credentials are denied', async () => {
+    await request(app).post('/v1/fragments').auth('dummyUser@email.com', 'password1').expect(401);
   });
 
   test('authenticated users get fragment', async () => {
