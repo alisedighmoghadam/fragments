@@ -1,5 +1,5 @@
 const request = require('supertest');
-
+const hash = require('../../src/hash');
 const app = require('../../src/app');
 
 const { Fragment } = require('../../src/model/fragment');
@@ -21,7 +21,8 @@ describe('POST /v1/fragments', () => {
       .auth(userEmail, 'password1')
       .set('Content-type', 'text/plain')
       .send(content);
-    const fragment = await Fragment.byUser(userEmail, true);
+    const hashedEmail = hash(userEmail);
+    const fragment = await Fragment.byUser(hashedEmail, true);
 
     expect(res.statusCode).toBe(201);
     expect(res.body.status).toBe('ok');
