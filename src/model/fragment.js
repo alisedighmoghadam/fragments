@@ -13,6 +13,7 @@ const {
   listFragments,
   deleteFragment,
 } = require('./data/memory');
+const logger = require('../logger');
 
 const supportedConversions = {
   'text/plain': ['text/plain'],
@@ -28,7 +29,8 @@ const supportedConversions = {
 class Fragment {
   constructor({ id, ownerId, created, updated, type, size = 0 }) {
     if (!(ownerId && type)) {
-      throw new Error('Missing entry for ownerId or type');
+      logger.error(`Missing entry for ownerId=${ownerId} or type=${type}`);
+      throw new Error(`Missing entry for ownerId or type`);
     }
 
     if (typeof size !== 'number') {
@@ -144,6 +146,7 @@ class Fragment {
       throw new Error('Buffer entry is required');
     }
     this.size = data.length;
+    this._obj.size = this.size;
     this._buffer = data;
     this.updated = new Date().toISOString();
     this._obj.updated = this.updated;
