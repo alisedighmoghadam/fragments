@@ -18,6 +18,28 @@ const { createSuccessResponse } = require('../response');
  */
 router.use(`/v1`, authenticate(), require('./api'));
 
+// const { Fragment } = require('../model/fragment');
+// // const { createSuccessResponse } = require('../../response');
+// const rawBody = () =>
+//   express.raw({
+//     inflate: true,
+//     limit: '5mb',
+//     type: (req) => {
+//       // See if we can parse this content type. If we can, `req.body` will be
+//       // a Buffer (e.g., `Buffer.isBuffer(req.body) === true`). If not, `req.body`
+//       // will be equal to an empty Object `{}` and `Buffer.isBuffer(req.body) === false`
+
+//       const { type } = contentType.parse(req);
+//       return Fragment.isSupportedType(type);
+//     },
+//   });
+
+// router.post('/fragments', rawBody(), (req, res) => {
+//   if (Buffer.isBuffer(req.body)) {
+//     const data = JSON.parse(req.body);
+//     res.status(200).json(createSuccessResponse(data));
+//   }
+// });
 /**
  * Define a simple health check route. If the server is running
  * we'll respond with a 200 OK.  If not, the server isn't healthy.
