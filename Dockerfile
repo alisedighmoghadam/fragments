@@ -1,7 +1,7 @@
 #Docker file for fragment microservice.
 
 #use node version 22.12.0
-FROM node:22.12.0-alpine3.21 AS build
+FROM node:22.12.0-alpine3.20 AS build
 
 LABEL maintainer="Ali Sedigh Moghadam <asedigh-moghadam@myseneca.ca>"
 LABEL description="Fragments Node.js microservice"
