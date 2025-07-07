@@ -47,7 +47,7 @@ USER node
 COPY --from=build --chown=node:node /app /app/
 
 # Start the container by running our server
-CMD npm start
+CMD ["npm", "start"]
 
 # We run our service on port 8080
 EXPOSE 8080
