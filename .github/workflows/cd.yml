@@ -36,7 +36,7 @@ jobs:
         # update them if you are doing this during a new session:
         # `Error: The security token included in the request is expired
       - name: Configure AWS Credentials using Secrets
-        uses: aws_actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           # Use our GitHub Encrypted Secrets via secrets.*
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
