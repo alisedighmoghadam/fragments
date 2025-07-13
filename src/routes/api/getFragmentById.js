@@ -7,7 +7,7 @@ module.exports = async (req, res) => {
   logger.info(`Getting fragment with id: ${id} for user ${req.user}`);
 
   try {
-    const data = await Fragment.byId(req.user, id);
+    const data = { fragment: await Fragment.byId(req.user, id) };
     res.status(200).json(createSuccessResponse(data));
   } catch (err) {
     logger.error(err, `Error getting fragment with id: ${id}, for user ${req.user}`);
