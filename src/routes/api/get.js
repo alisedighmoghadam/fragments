@@ -10,7 +10,8 @@ module.exports = async (req, res) => {
   logger.info(`Getting list of fragments for id: ${req.user} with expand of ${req.query.expand}`);
 
   try {
-    const data = await Fragment.byUser(req.user, expand);
+    const data = { fragments: await Fragment.byUser(req.user, expand) };
+
     res.status(200).json(createSuccessResponse(data));
   } catch (err) {
     logger.error(err, 'Error getting fragments');
