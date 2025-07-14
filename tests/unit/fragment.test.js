@@ -255,4 +255,45 @@ describe('Fragment class', () => {
       expect(() => Fragment.byId('1234', fragment.id)).rejects.toThrow();
     });
   });
+  describe('getAllFragments()', () => {
+    test('getAllFragments() returns all fragments grouped by user with data included', async () => {
+      const userA = 'userA';
+      const userB = 'userB';
+
+      // Fragment for userA
+      const fragA1 = new Fragment({ ownerId: userA, type: 'text/plain', size: 0 });
+      await fragA1.save();
+      await fragA1.setData(Buffer.from('dataA1'));
+
+      // Fragment for userB
+      const fragB1 = new Fragment({ ownerId: userB, type: 'text/plain', size: 0 });
+      await fragB1.save();
+      await fragB1.setData(Buffer.from('dataB1'));
+
+      // Call getAllFragments
+      const result = await Fragment.getAllFragments();
+
+      console.log(result);
+      // Ensure result is an object with both user keys
+      expect(result).toHaveProperty(userA);
+      expect(result).toHaveProperty(userB);
+
+      // Check that each entry is an array
+      expect(Array.isArray(result[userA])).toBe(true);
+      expect(Array.isArray(result[userB])).toBe(true);
+
+      // Check contents
+      const userAFragments = result[userA];
+      const userBFragments = result[userB];
+
+      const fragAData = userAFragments.find((f) => f.id === fragA1.id);
+      const fragBData = userBFragments.find((f) => f.id === fragB1.id);
+
+      expect(fragAData).toBeDefined();
+      expect(fragAData.data).toBe('dataA1');
+
+      expect(fragBData).toBeDefined();
+      expect(fragBData.data).toBe('dataB1');
+    });
+  });
 });

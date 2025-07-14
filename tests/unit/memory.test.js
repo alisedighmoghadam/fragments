@@ -5,6 +5,7 @@ const {
   writeFragmentData,
   listFragments,
   deleteFragment,
+  getAllOwnerIds,
 } = require('../../src/model/data/memory');
 
 describe('Memory Index', () => {
@@ -75,6 +76,42 @@ describe('Memory Index', () => {
     expect(result).toEqual(['abc', 'efg']);
     await deleteFragment('123', 'abc');
     await deleteFragment('123', 'efg');
+  });
+
+  test('getAllOwnerIds() return an array of all ownerIds', async () => {
+    const testFragment1 = {
+      id: 'abc',
+      ownerId: '123',
+    };
+    const testFragment2 = {
+      id: 'efg',
+      ownerId: '123',
+    };
+    const testFragment3 = {
+      id: 'vfg',
+      ownerId: '345',
+    };
+    const testFragment4 = {
+      id: 'tew',
+      ownerId: '678',
+    };
+    const buffer = 'hello';
+    await writeFragment(testFragment1);
+    await writeFragmentData('123', 'abc', buffer);
+    await writeFragment(testFragment2);
+    await writeFragmentData('123', 'efg', buffer);
+    await writeFragment(testFragment3);
+    await writeFragmentData('345', 'vfg', buffer);
+    await writeFragment(testFragment4);
+    await writeFragmentData('678', 'tew', buffer);
+    const result = await getAllOwnerIds();
+
+    expect(Array.isArray(result)).toBe(true);
+    expect(result).toEqual(['123', '345', '678']);
+    await deleteFragment('123', 'abc');
+    await deleteFragment('123', 'efg');
+    await deleteFragment('345', 'vfg');
+    await deleteFragment('678', 'tew');
   });
 
   test('readFragment() read existence fragment', async () => {

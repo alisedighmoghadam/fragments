@@ -86,6 +86,15 @@ class MemoryDB {
     delete db[primaryKey][secondaryKey];
     return Promise.resolve();
   }
+
+  /**
+   * Returns all primary keys as an array
+   * @returns {Promise<string[]>}
+   */
+  async getAllPrimaryKeys() {
+    const db = this.db;
+    return Promise.resolve(Object.keys(db));
+  }
 }
 
 module.exports = MemoryDB;

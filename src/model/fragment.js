@@ -12,6 +12,7 @@ const {
   writeFragmentData,
   listFragments,
   deleteFragment,
+  getAllOwnerIds,
 } = require('./data/memory');
 const logger = require('../logger');
 
@@ -69,19 +70,19 @@ class Fragment {
    */
   static async byUser(ownerId, expand = false) {
     const fragmentsMetaData = await listFragments(ownerId, expand);
-    var fragments = [];
-    if (expand) {
-      fragmentsMetaData.map(async (fragmentMetaData) => {
-        const data = await readFragmentData(ownerId, fragmentMetaData.id);
-        var fragment = new Fragment(fragmentMetaData);
-        fragment.setData(data);
-        fragments.push(fragment);
-      });
-    } else {
-      return Promise.resolve(fragmentsMetaData);
+
+    if (!expand) {
+      return fragmentsMetaData;
     }
 
-    return Promise.resolve(fragments);
+    return await Promise.all(
+      fragmentsMetaData.map(async (meta) => {
+        const data = await readFragmentData(ownerId, meta.id);
+        const fragment = new Fragment(meta);
+        if (data) await fragment.setData(data);
+        return fragment;
+      })
+    );
   }
 
   /**
@@ -193,6 +194,34 @@ class Fragment {
       return true;
     }
     return false;
+  }
+
+  static async getAllFragments() {
+    const ownerIds = await getAllOwnerIds();
+    const result = {};
+
+    for (const ownerId of ownerIds) {
+      const fragments = await this.byUser(ownerId, true);
+
+      // Convert each Fragment instance into plain object with data
+      const fragmentObjects = await Promise.all(
+        fragments.map(async (f) => {
+          const dataBuffer = await f.getData();
+          return {
+            ...f._obj,
+            data: dataBuffer
+              ? f.isText
+                ? dataBuffer.toString()
+                : dataBuffer.toString('base64')
+              : null,
+          };
+        })
+      );
+
+      result[ownerId] = fragmentObjects;
+    }
+
+    return result;
   }
 }
 

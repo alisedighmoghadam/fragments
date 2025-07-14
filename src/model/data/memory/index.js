@@ -55,9 +55,14 @@ function deleteFragment(ownerId, id) {
   ]);
 }
 
+async function getAllOwnerIds() {
+  return await data.getAllPrimaryKeys();
+}
+
 module.exports.listFragments = listFragments;
 module.exports.writeFragment = writeFragment;
 module.exports.readFragment = readFragment;
 module.exports.writeFragmentData = writeFragmentData;
 module.exports.readFragmentData = readFragmentData;
 module.exports.deleteFragment = deleteFragment;
+module.exports.getAllOwnerIds = getAllOwnerIds;

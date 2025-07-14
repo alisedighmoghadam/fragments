@@ -54,6 +54,19 @@ describe('memory-db', () => {
     expect(results).toEqual([]);
   });
 
+  test('getAllPrimaryKeys() returns all the primary keys', async () => {
+    await db.put('b', 'a', { value: 1 });
+    await db.put('b', 'b', { value: 2 });
+    await db.put('b', 'c', { value: 3 });
+    await db.put('j', 'e', { value: 1 });
+    await db.put('d', 'w', { value: 2 });
+    await db.put('j', 'p', { value: 3 });
+
+    const results = await db.getAllPrimaryKeys();
+    expect(Array.isArray(results)).toBe(true);
+    expect(results).toEqual(['b', 'j', 'd']);
+  });
+
   test('del() removes value put() into db', async () => {
     await db.put('a', 'a', { value: 1 });
     expect(await db.get('a', 'a')).toEqual({ value: 1 });
