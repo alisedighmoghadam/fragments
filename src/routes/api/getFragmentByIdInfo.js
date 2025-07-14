@@ -10,7 +10,7 @@ module.exports = async (req, res) => {
     const data = { fragment: (await Fragment.byId(req.user, id))._obj };
     res.status(200).json(createSuccessResponse(data));
   } catch (err) {
-    logger.error(err, `Error getting fragment with id: ${id}, for user ${req.user}`);
+    logger.error(err, `Error getting fragment info with id: ${id}, for user ${req.user}`);
     res.status(500).json({ status: 'error', message: 'Unable to fetch fragment' });
   }
 };
