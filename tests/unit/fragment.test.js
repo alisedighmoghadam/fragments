@@ -227,7 +227,16 @@ describe('Fragment class', () => {
       await fragment.save();
       await fragment.setData(data);
 
-      expect(await Fragment.byUser(ownerId, true)).toEqual([fragment]);
+      const result = await Fragment.byUser(ownerId, true);
+
+      expect(result.length).toBe(1);
+      const fetched = result[0];
+
+      expect(fetched.id).toBe(fragment.id);
+      expect(fetched.ownerId).toBe(fragment.ownerId);
+      expect(fetched.type).toBe(fragment.type);
+      expect(fetched.size).toBe(fragment.size);
+      expect(await fetched.getData()).toEqual(data);
     });
 
     test('setData() throws if not give a Buffer', () => {
