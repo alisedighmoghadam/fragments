@@ -282,7 +282,6 @@ describe('Fragment class', () => {
       // Call getAllFragments
       const result = await Fragment.getAllFragments();
 
-      console.log(result);
       // Ensure result is an object with both user keys
       expect(result).toHaveProperty(userA);
       expect(result).toHaveProperty(userB);

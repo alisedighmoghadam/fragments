@@ -29,6 +29,7 @@ const rawBody = () =>
 router.get('/fragments', require('./get'));
 // Other routes (POST, DELETE, etc.) will go here later on...
 
+router.get('/fragments/all', require('./getAllFragments'));
 router.get('/fragments/:id.:ext', require('./getFragmentWithExtension'));
 router.get('/fragments/:id', require('./getFragmentById'));
 router.get('/fragments/:id/info', require('./getFragmentByIdInfo'));
