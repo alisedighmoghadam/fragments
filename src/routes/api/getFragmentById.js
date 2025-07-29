@@ -7,7 +7,14 @@ module.exports = async (req, res) => {
   logger.info(`Getting fragment with id: ${id} for user ${req.user}`);
 
   try {
-    const data = { fragment: await Fragment.byId(req.user, id) };
+    const fragment = await Fragment.byId(req.user, id);
+
+    const body = Buffer.from(fragment._buffer).toString();
+    const data = {
+      fragment,
+      body,
+    };
+    res.setHeader('Content-Type', fragment.mimeType);
     res.status(200).json(createSuccessResponse(data));
   } catch (err) {
     logger.error(err, `Error getting fragment with id: ${id}, for user ${req.user}`);

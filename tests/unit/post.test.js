@@ -39,6 +39,6 @@ describe('POST /v1/fragments', () => {
       .auth(userEmail, 'password1')
       .set('Content-type', 'audio/mpeg')
       .send(content);
-    expect(res.statusCode).toBe(204);
+    expect(res.statusCode).toBe(415);
   });
 });
