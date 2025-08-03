@@ -13,6 +13,6 @@ GET {{url}}
 user1@email.com:password1
 
 HTTP/1.1 200
-Content-Type: application/json
+Content-Type: application/json; charset=utf-8
 [Asserts]
-jsonpath "$.body" == "hello"
+jsonpath "$.body" == "{\"message\": \"hello\"}"

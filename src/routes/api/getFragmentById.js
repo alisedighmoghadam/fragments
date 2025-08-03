@@ -8,13 +8,17 @@ module.exports = async (req, res) => {
 
   try {
     const fragment = await Fragment.byId(req.user, id);
-
+    logger.info(`Fragment: ${fragment}`);
+    if (!fragment) {
+      res.status(404).json({ status: 'error', message: 'Fragment not found' });
+      return;
+    }
     const body = Buffer.from(fragment._buffer).toString();
     const data = {
       fragment,
       body,
     };
-    res.setHeader('Content-Type', fragment.mimeType);
+
     res.status(200).json(createSuccessResponse(data));
   } catch (err) {
     logger.error(err, `Error getting fragment with id: ${id}, for user ${req.user}`);

@@ -15,4 +15,4 @@ user1@email.com:password1
 HTTP/1.1 200
 Content-Type: text/plain; charset=utf-8
 [Asserts]
-body == "Charset test fragment"
+jsonpath "$.body" == "Charset test fragment"

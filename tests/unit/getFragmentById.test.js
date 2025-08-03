@@ -54,7 +54,7 @@ describe('GET /v1/fragments/:id', () => {
       .get('/v1/fragments/nonexistent-id-12345')
       .auth(userEmail, password);
 
-    expect(res.statusCode).toBe(500); // Or 404 if your handler is improved to catch not found
+    expect(res.statusCode).toBe(404); // Or 404 if your handler is improved to catch not found
     expect(res.body.status).toBe('error');
   });
 });
