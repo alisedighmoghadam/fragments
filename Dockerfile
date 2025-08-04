@@ -42,7 +42,7 @@ ENV PORT=8080 \
 
 WORKDIR /app
 
-USER node
+# USER node
 
 COPY --from=build --chown=node:node /app /app/
 
