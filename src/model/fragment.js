@@ -13,7 +13,7 @@ const {
   listFragments,
   deleteFragment,
   getAllOwnerIds,
-} = require('./data/memory');
+} = require('./data');
 const logger = require('../logger');
 
 const supportedConversions = {
