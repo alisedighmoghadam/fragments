@@ -25,7 +25,7 @@ user1@email.com:password1
 
 HTTP/1.1 200
 [Asserts]
-header "content-type" == "text/plain; charset=utf-8"
+header "content-type" == "application/json; charset=utf-8"
 jsonpath "$.body" == "Hello S3!"
 
 # 3. DELETE the fragment using the same url

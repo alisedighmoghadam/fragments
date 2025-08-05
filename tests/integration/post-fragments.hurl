@@ -42,7 +42,7 @@ GET {{url}}
 user1@email.com:password1
 
 HTTP/1.1 200
-Content-Type: text/plain; charset=utf-8
+Content-Type: application/json; charset=utf-8
 Content-Length: 622
 [Asserts]
 jsonpath "$.body" == "This is a fragment!"
