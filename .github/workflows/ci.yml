@@ -94,23 +94,78 @@ jobs:
   integration-tests:
     name: Integration Tests
     runs-on: ubuntu-latest
+    env:
+      COMPOSE_LOG_LEVEL: DEBUG
+      DOCKER_BUILDKIT: 1
+      LOG_LEVEL: debug
     steps:
       - name: Check out code
         uses: actions/checkout@v4
+
       - name: Setup node
         uses: actions/setup-node@v4
         with:
           node-version: 'lts/*'
           cache: 'npm'
-      - name: Install node dependencies
-        run: npm install
-      - name: Build Containers
-        run: docker compose up
+
+      - name: Install deps and print versions
+        run: |
+          set -euxo pipefail
+          npm ci
+          docker version
+          docker compose version
+
+      - name: Build containers (verbose)
+        run: |
+          set -euxo pipefail
+          docker compose build --progress=plain
+
       - name: Make local-aws-setup.sh executable
         run: chmod +x ./scripts/local-aws-setup.sh
+
+      - name: Start stack (detached) and wait for health
+        run: |
+          set -euxo pipefail
+          # Requires healthchecks in your compose services
+          docker compose up -d --wait --wait-timeout 180
+          docker compose ps
+
+      - name: Stream logs in background
+        run: |
+          set -euxo pipefail
+          mkdir -p artifacts
+          (docker compose logs --follow --timestamps 2>&1 | tee artifacts/compose-live.log) &
+          echo $! > logs.pid
+
       - name: Setup Local AWS Resources
         # NOTE: this file needs to be made executable *before* you check into git:
         # $ chmod +x ./scripts/local-aws-setup.sh
         run: ./scripts/local-aws-setup.sh
+
       - name: Run Hurl Tests
         run: npm run test:integration
+
+      - name: Collect Docker diagnostics
+        if: always()
+        run: |
+          set -euxo pipefail
+          docker compose ps -a > artifacts/compose-ps.txt
+          docker compose logs --no-color --timestamps > artifacts/compose-logs.txt || true
+          for c in $(docker compose ps -q); do
+            NAME=$(docker inspect --format '{{.Name}}' "$c" | tr -d '/')
+            docker inspect "$c" > "artifacts/inspect-$NAME.json" || true
+          done
+
+      - name: Upload diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: docker-diagnostics
+          path: artifacts/
+
+      - name: Stop log streamer & tear down
+        if: always()
+        run: |
+          set -euxo pipefail
+          kill "$(cat logs.pid)" || true
+          docker compose down -v
