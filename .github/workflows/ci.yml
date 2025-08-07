@@ -105,7 +105,7 @@ jobs:
       - name: Install node dependencies
         run: npm install
       - name: Build Containers
-        run: docker compose up -d
+        run: docker compose up
       - name: Make local-aws-setup.sh executable
         run: chmod +x ./scripts/local-aws-setup.sh
       - name: Setup Local AWS Resources
