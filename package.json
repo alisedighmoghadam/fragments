@@ -10,7 +10,7 @@
     "start": "node src/index.js",
     "dev": "cross-env LOG_LEVEL=debug nodemon ./src/index.js --watch src",
     "debug": "cross-env LOG_LEVEL=debug nodemon --inspect=0.0.0.0:9229 ./src/index.js --watch src",
-    "test:integration": "hurl --test --glob \"tests/integration/**/*.hurl\""
+    "test:integration": "hurl --test --jobs 1 --glob  \"tests/integration/**/*.hurl\""
   },
   "repository": {
     "type": "git",
