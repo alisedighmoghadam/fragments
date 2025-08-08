@@ -50,5 +50,5 @@ COPY --from=build --chown=node:node /app /app/
 CMD ["npm", "start"]
 
 # We run our service on port 8080
-EXPOSE 8080
+EXPOSE 80
 
