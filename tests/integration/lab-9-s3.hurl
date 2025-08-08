@@ -40,5 +40,6 @@ HTTP/1.1 200
 GET {{url}}
 [BasicAuth]
 user1@email.com:password1
-
+[Options]
+delay: 5s
 HTTP/1.1 404
