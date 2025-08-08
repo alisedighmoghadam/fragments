@@ -8,6 +8,7 @@ module.exports = async (req, res) => {
 
   try {
     const data = { fragment: await Fragment.getAllFragments() };
+    res.set('Cache-Control', 'no-store');
     res.status(200).json(createSuccessResponse(data));
   } catch (err) {
     logger.error(err, `Error getting fragment with id: ${id}, for user ${req.user}`);
