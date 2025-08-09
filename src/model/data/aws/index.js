@@ -1,10 +1,15 @@
 const s3Client = require('./s3Client');
 const ddbDocClient = require('./ddbDocClient');
-const { PutCommand, GetCommand, QueryCommand, DeleteCommand } = require('@aws-sdk/lib-dynamodb');
+const {
+  PutCommand,
+  GetCommand,
+  QueryCommand,
+  DeleteCommand,
+  ScanCommand,
+} = require('@aws-sdk/lib-dynamodb');
 const { PutObjectCommand, GetObjectCommand, DeleteObjectCommand } = require('@aws-sdk/client-s3');
 
 const logger = require('../../../logger');
-const { param } = require('../../../routes/api');
 
 // Write a fragment's metadata to memory db. Returns a Promise<void>
 function writeFragment(fragment) {
@@ -88,14 +93,30 @@ async function listFragments(ownerId, expand = false) {
 }
 
 async function getAllOwnerIds() {
-  const params = { TableName: process.env.AWS_DYNAMODB_TABLE_NAME };
-  param.ProjectionExpression = 'id';
-  const command = new QueryCommand(params);
+  const params = {
+    TableName: process.env.AWS_DYNAMODB_TABLE_NAME,
+    ProjectionExpression: 'ownerId', // only fetch the ownerId attribute
+  };
+
+  const owners = new Set();
+  let ExclusiveStartKey;
+
   try {
-    const data = await ddbDocClient.send(command);
-    return data?.Items;
+    do {
+      const { Items = [], LastEvaluatedKey } = await ddbDocClient.send(
+        new ScanCommand({ ...params, ExclusiveStartKey })
+      );
+
+      for (const it of Items) {
+        if (it.ownerId) owners.add(it.ownerId);
+      }
+
+      ExclusiveStartKey = LastEvaluatedKey;
+    } while (ExclusiveStartKey);
+
+    return [...owners]; // array of unique ownerIds
   } catch (err) {
-    logger.error({ err, params }, 'error getting all fragments ');
+    logger.error({ err, params }, 'error getting all ownerIds from DynamoDB');
     throw err;
   }
 }
