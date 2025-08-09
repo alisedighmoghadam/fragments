@@ -4,6 +4,7 @@ const { PutCommand, GetCommand, QueryCommand, DeleteCommand } = require('@aws-sd
 const { PutObjectCommand, GetObjectCommand, DeleteObjectCommand } = require('@aws-sdk/client-s3');
 
 const logger = require('../../../logger');
+const { param } = require('../../../routes/api');
 
 // Write a fragment's metadata to memory db. Returns a Promise<void>
 function writeFragment(fragment) {
@@ -87,13 +88,14 @@ async function listFragments(ownerId, expand = false) {
 }
 
 async function getAllOwnerIds() {
-  const prams = { TableName: process.env.AWS_DYNAMODB_TABLE_NAME };
-  const command = new QueryCommand(prams);
+  const params = { TableName: process.env.AWS_DYNAMODB_TABLE_NAME };
+  param.ProjectionExpression = 'id';
+  const command = new QueryCommand(params);
   try {
     const data = await ddbDocClient.send(command);
     return data?.Items;
   } catch (err) {
-    logger.error({ err, prams }, 'error getting all fragments ');
+    logger.error({ err, params }, 'error getting all fragments ');
     throw err;
   }
 }
