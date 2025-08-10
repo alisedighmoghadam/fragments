@@ -51,7 +51,7 @@ describe('GET /v1/fragments/:id/info', () => {
       .get('/v1/fragments/nonexistent-id-abc123/info')
       .auth(userEmail, password);
 
-    expect(res.statusCode).toBe(500); // or 404 if you're handling not found explicitly
+    expect(res.statusCode).toBe(404);
     expect(res.body.status).toBe('error');
     expect(res.body.message).toBe('Unable to fetch fragment');
   });
