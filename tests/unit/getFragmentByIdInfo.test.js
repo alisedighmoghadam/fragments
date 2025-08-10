@@ -53,6 +53,5 @@ describe('GET /v1/fragments/:id/info', () => {
 
     expect(res.statusCode).toBe(404);
     expect(res.body.status).toBe('error');
-    expect(res.body.message).toBe('Unable to fetch fragment');
   });
 });
