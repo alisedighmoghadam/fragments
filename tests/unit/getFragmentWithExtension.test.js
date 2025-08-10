@@ -60,7 +60,7 @@ describe('GET /v1/fragments/:id.ext', () => {
 
     expect(res.statusCode).toBe(415);
     expect(res.body.status).toBe('error');
-    expect(res.body.message).toMatch(/Cannot convert to \.json/);
+    expect(res.body.message).toMatch('Cannot convert this format to .json');
   });
 
   test('nonexistent fragment returns 404', async () => {

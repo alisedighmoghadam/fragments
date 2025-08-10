@@ -7,7 +7,7 @@ module.exports = async (req, res) => {
   const contentLength = req.headers[`Content-Length`];
   if (Buffer.isBuffer(req.body)) {
     logger.info(
-      `Getting req body ownerId=${req.user}, type=${contentType} and size=${req.body.size}`
+      `Getting req body ownerId=${req.user}, type=${contentType} and size=${contentLength}`
     );
     var fragment = new Fragment({
       ownerId: req.user,
@@ -26,5 +26,5 @@ module.exports = async (req, res) => {
     return;
   }
   logger.error(`Unsupported content type: ${contentType}`);
-  res.status(415).json(createErrorResponse(204, `Unsupported content type: ${contentType}`));
+  res.status(415).json(createErrorResponse(`Unsupported content type: ${contentType}`));
 };

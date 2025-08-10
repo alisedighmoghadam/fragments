@@ -20,11 +20,14 @@ const supportedConversions = {
   'text/plain': ['text/plain'],
   'text/markdown': ['text/markdown', 'text/html', 'text/plain'],
   'text/html': ['text/html', 'text/plain'],
+  'text/csv': ['text/csv', 'text/plain', 'application/json'],
   'application/json': ['application/json', 'text/plain'],
-  'image/png': ['image/png', 'image/jpeg', 'image/webp', 'image/gif'],
-  'image/jpeg': ['image/jpeg', 'image/png', 'image/webp', 'image/gif'],
-  'image/webp': ['image/webp', 'image/png', 'image/jpeg', 'image/gif'],
-  'image/gif': ['image/gif', 'image/png', 'image/jpeg', 'image/webp'],
+  'application/yaml': ['application/yaml', 'text/plain'],
+  'image/png': ['image/png', 'image/jpeg', 'image/webp', 'image/gif', 'image/avif'],
+  'image/jpeg': ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/avif'],
+  'image/webp': ['image/webp', 'image/png', 'image/jpeg', 'image/gif', 'image/avif'],
+  'image/avif': ['image/png', 'image/jpeg', 'image/webp', 'image/avif', 'image/gif'],
+  'image/gif': ['image/gif', 'image/png', 'image/jpeg', 'image/webp', 'image/avif'],
 };
 
 class Fragment {
@@ -133,8 +136,9 @@ class Fragment {
    * Gets the fragment's data from the database
    * @returns Promise<Buffer>
    */
-  getData() {
-    return Promise.resolve(readFragmentData(this.ownerId, this.id));
+  async getData() {
+    const data = await readFragmentData(this.ownerId, this.id);
+    return data;
   }
 
   /**
@@ -171,8 +175,10 @@ class Fragment {
    * @returns {boolean} true if fragment's type is text/*
    */
   get isText() {
-    const result = this.mimeType.startsWith('text');
-    return result;
+    return (
+      this.mimeType.startsWith('text') ||
+      ['application/json', 'application/yaml'].includes(this.mimeType)
+    );
   }
 
   /**
