@@ -71,6 +71,12 @@ class Fragment {
    * @param {boolean} expand whether to expand ids to full fragments
    * @returns Promise<Array<Fragment>>
    */
+  async hydrate(data) {
+    if (!data) return;
+    this._buffer = data;
+    this.size = data.length;
+    this._obj.size = this.size;
+  }
   static async byUser(ownerId, expand = false) {
     const fragmentsMetaData = await listFragments(ownerId, expand);
 
@@ -82,7 +88,7 @@ class Fragment {
       fragmentsMetaData.map(async (meta) => {
         const data = await readFragmentData(ownerId, meta.id);
         const fragment = new Fragment(meta);
-        if (data) await fragment.setData(data);
+        await fragment.hydrate(data);
         return fragment;
       })
     );
@@ -102,9 +108,7 @@ class Fragment {
     const data = await readFragmentData(ownerId, id);
     var fragment = new Fragment(result);
 
-    if (data) {
-      await fragment.setData(data);
-    }
+    await fragment.hydrate(data);
 
     return Promise.resolve(fragment);
   }
@@ -156,6 +160,7 @@ class Fragment {
     this._buffer = data;
     this.updated = new Date().toISOString();
     this._obj.updated = this.updated;
+    await writeFragment(this._obj);
     await writeFragmentData(this.ownerId, this.id, this._buffer);
     return Promise.resolve();
   }

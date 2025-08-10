@@ -23,8 +23,8 @@ module.exports = async (req, res) => {
     }
 
     logger.info(`Fragment with id: ${id} being updated body: ${req.body}`);
-    fragment.setData(req.body);
-    fragment.save();
+    await fragment.setData(req.body);
+    await fragment.save();
     res.status(200).json(createSuccessResponse(fragment));
   } catch (err) {
     logger.error(err, `Error updating fragment ${id}`);
