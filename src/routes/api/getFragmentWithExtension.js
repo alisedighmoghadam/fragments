@@ -132,14 +132,14 @@ module.exports = async (req, res) => {
       return res.status(200).send(data.toString('utf8'));
     }
     const data = await fragment.getData();
-    console.log(fragment.isText ? data.toString('utf8') : data);
+
     // Try conversion
     const converted = await convert(
       fragment.isText ? data.toString('utf8') : data,
       fragment.mimeType,
       targetMime
     );
-    console.log(converted);
+
     res.setHeader('Content-Type', targetMime);
     return res.status(200).send(converted);
   } catch (err) {
